@@ -1,29 +1,34 @@
-#test
-name: testexo1
-on: [push]
+name: Python application test with Github Actions
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
 jobs:
-   run:
-     runs-on: ubuntu-latest
-     steps:
-     - uses: actions/setup-node@v3
-       with:
-         node-version: '16'
-     - uses: iterative/setup-cml@v1
-     - uses: actions/checkout@v3
-       with:
-         ref: ${{ github.event.pull_request.head.sha }}
-     - uses: actions/setup-python@v3
-       with:
-         python-version: '3.10'
-     - uses: py-actions/py-dependency-install@v4
-       with:
-         path: "requirements.txt"
-     - name: Test
-       env:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+    - uses: iterative/setup-cml@v1
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+    - uses: actions/setup-python@v3
+      with:
+        python-version: '3.10'
+    - uses: py-actions/py-dependency-install@v4
+      with:
+        path: "requirements.txt"
+    - name: Test
+      env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       run: |
+      run: |
           pip install --upgrade pip
-          python train.py
+          python main.py
           
           echo "# CML report" >> report.md
           echo '![](./feature_importance.png "Confusion Matrix")' >> report.md
